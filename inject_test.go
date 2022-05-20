@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/barnettZQG/inject"
 	"github.com/facebookgo/ensure"
-	"github.com/facebookgo/inject"
 
-	injecttesta "github.com/facebookgo/inject/injecttesta"
-	injecttestb "github.com/facebookgo/inject/injecttestb"
+	injecttesta "github.com/barnettZQG/inject/test/injecttesta"
+	injecttestb "github.com/barnettZQG/inject/test/injecttestb"
 )
 
 func init() {
@@ -24,7 +24,8 @@ type Answerable interface {
 }
 
 type TypeAnswerStruct struct {
-	answer  int
+	answer int
+	//nolint
 	private int
 }
 
@@ -156,6 +157,7 @@ func TestPrivate(t *testing.T) {
 }
 
 type TypeWithJustColon struct {
+	//nolint:govet
 	A *TypeAnswerStruct `inject:`
 }
 
@@ -168,11 +170,13 @@ func TestTagWithJustColon(t *testing.T) {
 
 	const msg = "unexpected tag format `inject:` for field A in type *inject_test.TypeWithJustColon"
 	if err.Error() != msg {
-		t.Fatalf("expected:\n%s\nactual:\n%s", msg, err.Error())
+		var a TypeWithJustColon
+		t.Fatalf("expected:\n%s\nactual:\n%s %v", msg, err.Error(), a.A)
 	}
 }
 
 type TypeWithOpenQuote struct {
+	//nolint:govet
 	A *TypeAnswerStruct `inject:"`
 }
 
@@ -185,7 +189,7 @@ func TestTagWithOpenQuote(t *testing.T) {
 
 	const msg = "unexpected tag format `inject:\"` for field A in type *inject_test.TypeWithOpenQuote"
 	if err.Error() != msg {
-		t.Fatalf("expected:\n%s\nactual:\n%s", msg, err.Error())
+		t.Fatalf("expected:\n%s\nactual:\n%s %v", msg, err.Error(), a.A)
 	}
 }
 
@@ -238,7 +242,7 @@ func TestProvideTwoOfTheSame(t *testing.T) {
 		t.Fatal("expected error")
 	}
 
-	const msg = "provided two unnamed instances of type *github.com/facebookgo/inject_test.TypeAnswerStruct"
+	const msg = "provided two unnamed instances of type *github.com/barnettZQG/inject_test.TypeAnswerStruct"
 	if err.Error() != msg {
 		t.Fatalf("expected:\n%s\nactual:\n%s", msg, err.Error())
 	}
@@ -251,7 +255,7 @@ func TestProvideTwoOfTheSameWithPopulate(t *testing.T) {
 		t.Fatal("expected error")
 	}
 
-	const msg = "provided two unnamed instances of type *github.com/facebookgo/inject_test.TypeAnswerStruct"
+	const msg = "provided two unnamed instances of type *github.com/barnettZQG/inject_test.TypeAnswerStruct"
 	if err.Error() != msg {
 		t.Fatalf("expected:\n%s\nactual:\n%s", msg, err.Error())
 	}
@@ -465,10 +469,6 @@ func TestInjectOnPrivateField(t *testing.T) {
 	}
 }
 
-type TypeWithInjectOnPrivateInterfaceField struct {
-	a Answerable `inject:""`
-}
-
 func TestInjectOnPrivateInterfaceField(t *testing.T) {
 	var a TypeWithInjectOnPrivateField
 	err := inject.Populate(&a)
@@ -478,7 +478,7 @@ func TestInjectOnPrivateInterfaceField(t *testing.T) {
 
 	const msg = "inject requested on unexported field a in type *inject_test.TypeWithInjectOnPrivateField"
 	if err.Error() != msg {
-		t.Fatalf("expected:\n%s\nactual:\n%s", msg, err.Error())
+		t.Fatalf("expected:\n%s\nactual:\n%s %v", msg, err.Error(), a.a)
 	}
 }
 
@@ -561,7 +561,7 @@ func TestInjectNamedOnPrivateInterfaceField(t *testing.T) {
 
 	const msg = "inject requested on unexported field a in type *inject_test.TypeWithInjectNamedOnPrivateInterfaceField"
 	if err.Error() != msg {
-		t.Fatalf("expected:\n%s\nactual:\n%s", msg, err.Error())
+		t.Fatalf("expected:\n%s\nactual:\n%s %v", msg, err.Error(), v.a)
 	}
 }
 

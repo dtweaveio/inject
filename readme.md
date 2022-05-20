@@ -1,4 +1,7 @@
-inject [![Build Status](https://secure.travis-ci.org/facebookgo/inject.png)](https://travis-ci.org/facebookgo/inject)
-======
+# Inject
 
-Documentation: https://godoc.org/github.com/facebookgo/inject
+This package provides the dependency injection with Go.
+
+## Example
+
+Please refer to [example](./example/)
