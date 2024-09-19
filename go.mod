@@ -1,4 +1,4 @@
-module github.com/barnettZQG/inject
+module github.com/dtweaveio/inject
 
 go 1.17
 
